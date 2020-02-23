@@ -1,8 +1,6 @@
 import requests
 from bs4 import BeautifulSoup as bs
 import csv
-from datetime import datetime
-from multiprocessing import Pool
 
 user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36"
 headers = {'accept': '*/*',
@@ -17,7 +15,6 @@ def hh_parse(base_url, headers):
     session = requests.session()
     request = session.get(base_url, headers=headers)
     if request.status_code == 200:
-        request = session.get(base_url, headers=headers)
         soup = bs(request.content, 'lxml')
         try:
             pages = soup.find_all('a', attrs={'data-qa': 'pager-page'})
@@ -53,6 +50,6 @@ def write_csv(jobs):
         for job in jobs:
             writer.writerow((job['title'], job['href'], job['company']))
 
-
-jobs = hh_parse(base_url, headers)
-write_csv(jobs)
+if __name__=="__main__":
+    jobs = hh_parse(base_url, headers)
+    write_csv(jobs)
