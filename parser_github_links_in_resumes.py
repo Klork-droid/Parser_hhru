@@ -11,12 +11,16 @@ header = {'accept': '*/*',
 
 def get_url_from_csv():
     urls = []
+    #i = 0
     with open('parsed_resumes.csv', 'r', encoding="UTF-8") as file:
         for line in file.readlines():
             if line != "\n":
                 begin = line.find('=HYPERLINK(""') + 13
                 end = line.rfind('"")"')
                 urls.append(line[begin:end])
+                #if i == 10:
+                 #   break
+                #i += 1
     return urls
 
 
@@ -29,27 +33,22 @@ def get_github_links(url):
     if request.status_code == 200:
         soup = bs(request.content, 'lxml')
         try:
-            div = str(soup.find('div', id="HH-Lux-InitialState"))
-            begin = div.find("https://github.com/")
+            a = soup.find('div', class_="resume-block-container", attrs={'data-qa':"resume-block-skills-content"}).text
+            begin = a.find("https://github.com/")
             if begin != -1:
-                link = div[begin:]
-                print(link)
+                link = a[begin:]
+                #print(link[:50])
                 if link.find(".", 16) != -1:
                     end_index.append(link.find(".", 16))
                 else:
                     end_index.append(len(link))
-                for i in ["\\", '"', ' ', ')', ',', '?', ']']:
+                for i in ["\n", '"', ' ', ')', ',', '?', ']', '\\']:
                     if link.find(i) != -1:
                         end_index.append(link.find(i))
                     else:
                         end_index.append(len(link))
-                end = min(end_index)
-                if end == len(link):
-                    print(link)
-                    print("Новый знак завершающий ссылку")
-                else:
-                    link = link[:end]
-                    print(link)
+                link = link[:min(end_index)]
+                print(link)
             else:
                 print('Ссылка отсутствует')
         except:
