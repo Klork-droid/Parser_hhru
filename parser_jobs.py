@@ -4,7 +4,7 @@ import csv
 
 user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36"
 headers = {'accept': '*/*',
-           'user-agent': 'user_agent'}
+           'user-agent': user_agent}
 
 base_url = "https://hh.ru/search/vacancy?L_is_autosearch=false&area=1&clusters=true&employment=probation&enable_snippets=true&order_by=publication_time&text=python"
 
